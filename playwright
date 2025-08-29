@@ -1,0 +1,37 @@
+from playwright.sync_api import sync_playwright
+
+URL = "https://hackmerlin.io/"
+
+with sync_playwright() as p:
+	browser = p.chromium.launch(headless=True)   # headless by default, but explicit here
+	context = browser.new_context()
+	page = context.new_page()
+	page.goto(URL, wait_until="networkidle")
+	print("Loaded Page:", page.title())
+
+	# The part where you actually do stuff.
+
+	# List buttons
+	buttons = page.locator("button")
+	ask_button = page.locator("button[type='Ask']")
+	submit_button = page.locator("button[type='Submit']")
+	print("Button count:", buttons.count())
+	for i in range(buttons.count()):
+		print(buttons.nth(i).inner_text())
+
+	# List Input forms
+	
+	text_input = page.locator("textarea")
+	password_input = page.locator("input")
+
+	# List Output forms
+	buttons = page.locator("blockquote")
+	print("Output count:", buttons.count())
+	for i in range(buttons.count()):
+		print(buttons.nth(i).inner_text())
+
+	# Optional: save a quick screenshot to confirm it loaded
+	page.screenshot(path="hackmerlin.png")
+	browser.close()
+
+print('Completed Successfully!')
