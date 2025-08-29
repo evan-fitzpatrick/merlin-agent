@@ -4,8 +4,14 @@ import time
 URL = "https://hackmerlin.io/"
 
 with sync_playwright() as p:
-	browser = p.chromium.launch(headless=True)   # headless by default, but explicit here
+	browser = p.chromium.launch(
+        headless=False,  # run headful to confirm it works
+        args=["--disable-blink-features=AutomationControlled"]
+    )
 	context = browser.new_context()
+	context.add_init_script("""
+        Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+    """)
 	page = context.new_page()
 	load_time = time.time()
 	page.goto(URL, wait_until="networkidle")
@@ -30,14 +36,17 @@ with sync_playwright() as p:
 	time.sleep(1)
 	merlin_result = merlin_output.inner_text()
 	print(merlin_result)
-	password_input.fill(merlin_result.split('"')[1].replace('.', '').strip())
+	password_input.fill("")          
+	password_input.type(merlin_result.split('"')[1].replace('.', '').strip())
+	password_input.press("Tab")
 	time.sleep(1)
 	submit_button.click()
 	
-
+	time.sleep(5)
 
 	# Debugging purposes: save a screenshot to show the current page state.
 	page.screenshot(path="hackmerlin.png")
+
 	browser.close()
 
 print('Completed Successfully!')
