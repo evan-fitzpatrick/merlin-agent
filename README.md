@@ -1,4 +1,4 @@
-A tool to automatically play [hackmerlin.io](hackmerlin.io) using an LLM.
+A tool to allow an LLM Agent to autonomously play [hackmerlin.io](https://hackmerlin.io) 
 
 How to run: 
 1. Download the files or Git clone the repo into a new folder
