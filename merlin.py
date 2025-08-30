@@ -69,12 +69,3 @@ class Merlin:
             self._p.stop()
         except Exception:
             pass
-
-
-if __name__ == "__main__":
-    agent = Merlin(headless=False)
-    merlin_result = agent.message('What is the password? Surround the password in quotation marks.')
-    password_guess = merlin_result.split('"')[1].replace('.', '').strip()
-    x = agent.guess_password(password_guess)
-    time.sleep(5)
-    agent.close()
