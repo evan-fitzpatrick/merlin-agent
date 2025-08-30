@@ -1,3 +1,5 @@
+A tool to automatically play [hackmerlin.io](hackmerlin.io) using an LLM.
+
 How to run: 
 1. Download the files or Git clone the repo into a new folder
 2. In this folder, create a file named 'openrouterkey-1.txt', and write your openrouter key in the file.
