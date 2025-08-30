@@ -3,49 +3,47 @@ from openrouterwrapper import OpenrouterWrapper
 import time
 
 system_prompt = open('sysprompt.txt', 'r').read()
+api_key = open('openrouterkey-1.txt', 'r').read().strip()
 model = "deepseek/deepseek-r1-0528:free"
+
 
 merlin = Merlin(headless=False)
 wrapper = OpenrouterWrapper(
 	model=model,
-	user_credentials=open('openrouterkey-1.txt', 'r').read(),
+	user_credentials=api_key,
 	system_prompt=system_prompt
 )
 
+max_messages = 10 # You may want this to be higher for level 7
 
-max_messages = 10
-bad_password_message = 'Alas! That password is incorrect!'
-
+# Dialogue loop
 for level in range(1,8):
+	# We clear the context for each new level
 	merlin_message = 'Hello traveler! Ask me anything...'
 	wrapper.clear_history(keep_system=True)
 	bad_password = False
-
 	print(f'Trying to solve level {level}')
 
+	# Dialogue loop
 	for i in range(max_messages):
-		if bad_password:
-			llm_message = wrapper.send_message(bad_password_message)
-			bad_password = False
-		else:
-			llm_message = wrapper.send_message(merlin_message)
+		agent_message = wrapper.send_message(merlin_message)
 
-		if 'Merlin:' in llm_message:
-			merlin_message = merlin.message(llm_message.split('Merlin: ')[-1])
-		elif 'Password:' in llm_message:
-			password_result = merlin.guess_password(llm_message.split('Password: ')[-1])
+		# Basic tool call
+		if 'Merlin:' in agent_message:
+			merlin_message = merlin.message(agent_message.split('Merlin: ')[-1])
+		elif 'Password:' in agent_message:
+			password_result = merlin.guess_password(agent_message.split('Password: ')[-1])
 			if password_result:
 				print(f'Successfully Completed Level {level}!\n')
 				break
 			else:
-				bad_password = True
-		else: 
-			print(f'!! Invalid Formatting !! {llm_message}')
+				merlin_message = 'Alas! That password is incorrect!'
+		else:
+			print(f'!! Invalid Tool Call !! \n{agent_message}\n')
 
-		if i == max_messages - 1:
+		# Abort if max messages is reached
+		if i + 1 == max_messages:
 			print(f'{model} got to level {level}.')
 			break;break
 
-
-time.sleep(3)
-merlin.close()
+merlin.close() 
