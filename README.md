@@ -2,8 +2,9 @@ A tool to allow an LLM Agent to autonomously play [hackmerlin.io](https://hackme
 
 How to run: 
 1. Download the files or Git clone the repo into a new folder
-2. In this folder, create a file named 'openrouterkey-1.txt', and write your openrouter key in the file.
-3. Open a cmd window, and run
+2. Make sure you have the required dependencies installed (playwright)
+3. In this folder, create a file named 'openrouterkey-1.txt', and write your openrouter key in the file.
+4. Open a cmd window, and run
 ~~~
 python agent.py
 ~~~
