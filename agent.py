@@ -2,20 +2,7 @@ from merlin import Merlin
 from openrouterwrapper import OpenrouterWrapper
 import time
 
-system_prompt = open('sysprompt.txt', 'r').read()
-api_key = open('openrouterkey-1.txt', 'r').read().strip()
-model = "moonshotai/kimi-k2:free"
-
-
-merlin = Merlin(headless=False)
-wrapper = OpenrouterWrapper(
-	model=model,
-	user_credentials=api_key,
-	system_prompt=system_prompt
-)
-
-
-def play_game(model, system_prompt, api_key, max_messages = 10): # You may want max_messages to be higher for level 7
+def play_game(model, system_prompt, api_key, max_messages = 10): # You may want max_messages to be higher for level 6/7
 	for level in range(1,8):
 		# We clear the context for each new level
 		merlin_message = 'Hello traveler! Ask me anything...'
@@ -45,5 +32,18 @@ def play_game(model, system_prompt, api_key, max_messages = 10): # You may want 
 				print(f'{model} got to level {level}.')
 				return
 
-play_game(model, system_prompt, api_key, max_messages=25)
-merlin.close() 
+
+if __name__ == "__main__":
+	system_prompt = open('sysprompt.txt', 'r').read()
+	api_key = open('openrouterkey-1.txt', 'r').read().strip()
+	model = "moonshotai/kimi-k2:free"
+
+	merlin = Merlin(headless=False)
+	wrapper = OpenrouterWrapper(
+		model=model,
+		user_credentials=api_key,
+		system_prompt=system_prompt
+	)
+
+	play_game(model, system_prompt, api_key, max_messages=100)
+	merlin.close() 
